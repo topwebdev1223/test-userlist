@@ -129,7 +129,7 @@ export default function SimpleTable() {
         params: filter
       })
       .then(({ data }) => {
-        setEmployees(data);
+        setEmployees(Array.isArray(data) ? data : []);
       })
       .finally(() => {
         setLoading(false);
