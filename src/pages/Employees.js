@@ -70,20 +70,20 @@ export default function SimpleTable() {
   });
 
   const [userDetails, setUserDetails] = useState({});
-  const [limits, setLimits] = useState([25, 50, 100, 200]);
+  const [limits] = useState([25, 50, 100, 200]);
   const [loading, setLoading] = useState(false);
   const [employees, setEmployees] = useState([]);
   const [userDetailsModalOpen, setUserDetailsModalOpen] = useState(false);
   const [loadingEmployeeDetails, setLoadingEmployeeDetails] = useState(true);
 
-  const [columns, setColumns] = useState([
+  const [columns] = useState([
     { title: 'Last Name', key: 'lastName' },
     { title: 'First Name', key: 'firstName' },
     { title: 'Username', key: 'userPrincipalName' },
     { title: 'Office Number', key: 'officePhone' },
     { title: 'Mobile Number', key: 'mobilePhone' }
   ]);
-  const [userDetailsRows, setUserDetailsRows] = useState([
+  const [userDetailsRows] = useState([
     { title: 'Last Name', key: 'lastName' },
     { title: 'First Name', key: 'firstName' },
     { title: 'Username', key: 'userPrincipalName' },
@@ -123,20 +123,21 @@ export default function SimpleTable() {
     });
   }
 
-  const fetchEmployees = () => {
-    setLoading(true);
-    axios.get('/employees', {
-        params: filter
-      })
-      .then(({ data }) => {
-        setEmployees(Array.isArray(data) ? data : []);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }
 
   useEffect(() => {
+    let fetchEmployees = () => {
+      setLoading(true);
+      axios.get('/employees', {
+          params: filter
+        })
+        .then(({ data }) => {
+          setEmployees(Array.isArray(data) ? data : []);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }
+
     fetchEmployees();
   }, [filter]);
 
