@@ -22,9 +22,11 @@ import {
   CircularProgress,
 } from '@material-ui/core';
 import {
+  Search as SearchIcon,
   Person as PersonIcon,
   PeopleAlt as PeopleAltIcon,
 } from '@material-ui/icons';
+import IconButton from '@material-ui/core/IconButton';
 
 const useStyles = makeStyles({
   employeeRow: {
@@ -64,6 +66,12 @@ export default function SimpleTable() {
   const classes = useStyles();
 
   const [filter, setFilter] = useState({
+    limit: 25,
+    lastName: '',
+    firstName: '',
+  });
+
+  const [staticFilter, setStaticFilter] = useState({
     limit: 25,
     lastName: '',
     firstName: '',
@@ -116,13 +124,18 @@ export default function SimpleTable() {
     });
   }
 
-  const handleChangeFilterKey = (e, key) => {
-    setFilter({
-      ...filter,
+  const handleChangeStaticFilterKey = (e, key) => {
+    setStaticFilter({
+      ...staticFilter,
       [key]: e.target.value
     });
   }
 
+  const onClickSearchIcon = () => {
+    setFilter({
+      ...staticFilter
+    });
+  }
 
   useEffect(() => {
     let fetchEmployees = () => {
@@ -148,33 +161,45 @@ export default function SimpleTable() {
           <Typography variant="h4">
             <PeopleAltIcon /> User List
           </Typography>
-          <Grid className={classes.filtersContainer} container spacing={4}>
-            <Grid item xs={12} md={4}>
-              <Select
-                fullWidth
-                value={filter.limit}
-                onChange={handleChangeLimit}
+          <Grid className={classes.filtersContainer} container>
+            <Grid item container md={11} spacing={4}>
+              <Grid item xs={12} md={4}>
+                <Select
+                  fullWidth
+                  value={filter.limit}
+                  onChange={handleChangeLimit}
+                >
+                  {limits.map((limit, limitIndex) => (
+                    <MenuItem value={limit} key={limitIndex}>{limit}</MenuItem>
+                  ))}
+                </Select>
+              </Grid>
+              <Grid item xs={12} md={4}>
+                <TextField
+                  fullWidth
+                  placeholder="Last Name"
+                  value={staticFilter.lastName}
+                  onChange={(e) => handleChangeStaticFilterKey(e, 'lastName')}
+                />
+              </Grid>
+              <Grid item xs={12} md={4}>
+                <TextField
+                  fullWidth
+                  placeholder="First Name"
+                  value={staticFilter.firstName}
+                  onChange={(e) => handleChangeStaticFilterKey(e, 'firstName')}
+                />
+              </Grid>
+            </Grid>
+            <Grid item xs={12} md={1}>
+              <IconButton
+                style={{
+                  float: 'right'
+                }}
+                onClick={onClickSearchIcon}
               >
-                {limits.map((limit, limitIndex) => (
-                  <MenuItem value={limit} key={limitIndex}>{limit}</MenuItem>
-                ))}
-              </Select>
-            </Grid>
-            <Grid item xs={12} md={4}>
-              <TextField
-                fullWidth
-                value={filter.lastName}
-                placeholder="Last Name"
-                onChange={(e) => handleChangeFilterKey(e, 'lastName')}
-              />
-            </Grid>
-            <Grid item xs={12} md={4}>
-              <TextField
-                fullWidth
-                value={filter.firstName}
-                placeholder="First Name"
-                onChange={(e) => handleChangeFilterKey(e, 'firstName')}
-              />
+                <SearchIcon />
+              </IconButton>
             </Grid>
           </Grid>
 
